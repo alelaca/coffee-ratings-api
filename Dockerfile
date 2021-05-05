@@ -2,7 +2,7 @@ FROM golang
 
 ADD . /go/src/github.com/alelaca/coffee-ratings-api
 
-RUN go install github.com/alelaca/coffee-ratings-api/cmd/server@master
+RUN go install github.com/alelaca/coffee-ratings-api/cmd/server@main
 
 ENTRYPOINT /go/bin/server
 
