@@ -37,19 +37,23 @@ func (r *Ratings) CreateRating(c *gin.Context) {
 	var ratingDTO RatingDTO
 	if err := json.Unmarshal(body, &ratingDTO); err != nil {
 		abortWithCustomError(c, http.StatusBadRequest, fmt.Errorf("invalid body in request"))
+		return
 	}
 
 	if ratingDTO.CoffeeType == "" {
 		abortWithCustomError(c, http.StatusBadRequest, fmt.Errorf("coffeeType parameter is required"))
+		return
 	}
 
 	if ratingDTO.StarRating == "" {
 		abortWithCustomError(c, http.StatusBadRequest, fmt.Errorf("starRating parameter is required"))
+		return
 	}
 
 	err = r.Service.CreateRating(ratingDTO.CoffeeType, ratingDTO.StarRating)
 	if err != nil {
 		abortWithCustomError(c, http.StatusInternalServerError, err)
+		return
 	}
 
 	c.JSON(http.StatusCreated, "Rating created")
@@ -59,6 +63,7 @@ func (r *Ratings) GetCoffeeTypeList(c *gin.Context) {
 	coffeeTypeList, err := r.Service.GetCoffeeTypeList()
 	if err != nil {
 		abortWithCustomError(c, http.StatusInternalServerError, err)
+		return
 	}
 
 	c.JSON(http.StatusOK, coffeeTypeList)
@@ -68,11 +73,13 @@ func (r *Ratings) GetRating(c *gin.Context) {
 	coffeeType := c.Query("coffeeType")
 	if coffeeType == "" {
 		abortWithCustomError(c, http.StatusBadRequest, fmt.Errorf("coffeeType query parameter is required"))
+		return
 	}
 
 	rating, err := r.Service.GetRating(coffeeType)
 	if err != nil {
 		abortWithCustomError(c, http.StatusInternalServerError, err)
+		return
 	}
 
 	if rating == nil {
